@@ -10,11 +10,6 @@ export default function ioHandler(req, res) {
       console.log("connect signal")
       console.log(`connected: ${socket.id}`)
       socket.join(socket.id)
-      socket.on("init", () => {
-        console.log("init signal")
-        io.to(socket.id).emit("hi", socket.id)
-        console.log("init signal 2")
-      })
     });
 
     res.socket.server.io = io
