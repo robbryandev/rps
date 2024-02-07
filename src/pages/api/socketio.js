@@ -31,13 +31,32 @@ export default function ioHandler(req, res) {
       })
 
       socket.on("join_room", (code) => {
-        console.log("join signal")
-        console.log(`code: ${code}`)
-        socket.join(code);
-        socket.emit("join_confirm");
+        if (io.sockets.adapter.rooms.get(code)) {
+          const data = JSON.parse(getRoomData(socket, code));
+          if (data.players.length < 2) {
+            console.log("join signal")
+            console.log(`code: ${code}`)
+            socket.join(code);
+            socket.emit("join_confirm")
+          } else {
+            socket.emit("room_full")
+          }
+        } else {
+          socket.emit("room_not_found")
+        }
+      })
+
+      socket.on("disconnecting", () => {
+        console.log("user left")
+        let code = socket.id;
+        if ([...socket.rooms].length > 1) {
+          code = [...socket.rooms][1];
+        }
+        console.log(`left code: ${code}`)
+        socket.leave(code)
+        socket.to(code).emit("room_data", getRoomData(socket, code));
       })
     });
-
     res.socket.server.io = io
   }
   res.end()

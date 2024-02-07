@@ -1,3 +1,4 @@
+import localforage from "localforage";
 import { Inter } from "next/font/google";
 import Link from "next/link";
 import router from "next/router";
@@ -19,6 +20,13 @@ export default function Game({ socket }: { socket: Socket }) {
     if (socket?.connected) {
       console.log("sending room signal")
       socket.emit("room");
+      socket.on("disconnect", () => {
+        localforage.getItem("room").then((room) => {
+          socket.emit("leave", room)
+        }).catch((err) => {
+          console.log(err)
+        })
+      })
       socket.on("room_data", (data: any) => {
         console.log("data: " + data)
         const jsonData = JSON.parse(data);
