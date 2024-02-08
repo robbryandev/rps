@@ -83,6 +83,7 @@ export default function MainGame<T extends string>({
       <p className="text-2xl">Rounds: {getRoundString(rounds)}</p>
       <p className="text-2xl">Round: {currentRound}</p>
       <p className="text-2xl">Wins: {wins}</p>
+
       <br />
       {
         gameOver ? (
@@ -109,6 +110,9 @@ export default function MainGame<T extends string>({
             )
           })
       }
+      <div className="w-72 h-auto">
+        <img className="grayscale" src={`/${settings.mode}.png`} alt="mode instructions" />
+      </div>
     </>
   )
 }
