@@ -4,10 +4,10 @@ import Link from "next/link";
 import { useState } from "react";
 import router from "next/router";
 import localforage from "localforage";
+import type { ModeOptions } from "@/modes/logic";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export type ModeOptions = "classic" | "fiveWay"
 export type RoundOptions = 3 | 5
 
 export type GameSettings = {
@@ -64,8 +64,9 @@ export default function Setup({ socket }: { socket: Socket }) {
               modeName: modeSelect.options[modeSelect.selectedIndex].text
             })
           }}>
-            <option value="classic" label="Classic">Classic</option>
-            <option value="fiveWay" label="Five Way">Five Way</option>
+            <option value="classic">Classic</option>
+            <option value="fiveWay">Five Way</option>
+            <option value="sevenWay">Seven Way</option>
           </select>
         </div>
         <div className="border border-neutral-400 py-10 text-center">

@@ -4,9 +4,9 @@ export const fiveWayOptionList = ["rock", "paper", "scissors", "lizard", "spock"
 export type FiveWayOptions = typeof fiveWayOptionList[number];
 
 export const fiveWayWin: WinLossMap<FiveWayOptions> = {
-  rock: { win: ["scissors", "lizard"], loss: ["paper", "spock"] },
-  paper: { win: ["rock", "spock"], loss: ["scissors", "lizard"] },
-  scissors: { win: ["paper", "lizard"], loss: ["spock", "rock"] },
-  lizard: { win: ["paper", "spock"], loss: ["scissors", "rock"] },
-  spock: { win: ["rock", "scissors"], loss: ["paper", "lizard"] }
+  rock: { win: ["scissors", "lizard"] },
+  paper: { win: ["rock", "spock"] },
+  scissors: { win: ["paper", "lizard"] },
+  lizard: { win: ["paper", "spock"] },
+  spock: { win: ["rock", "scissors"] }
 };

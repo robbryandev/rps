@@ -1,29 +1,28 @@
-import type { ModeOptions } from "@/pages/setup"
 import { type ClassicOptions, classicOptionList, classicWin } from "./classic"
 import { type FiveWayOptions, fiveWayOptionList, fiveWayWin } from "./fiveWay"
+import { type SevenWayOptions, sevenWayOptionList, sevenWayWin } from "./sevenWay"
 
 export type WinState = "win" | "lose" | "tie"
 
 export type WinLossMap<T extends string> = {
   [K in T]: {
-    win: Exclude<T, K>[],
-    loss: Exclude<T, K>[]
+    win: Exclude<T, K>[]
   }
 }
 
 export function winState<T extends string>(conditions: WinLossMap<T>, play: T, otherPlay: T): WinState {
   const win: string[] = [...conditions[play].win]
-  const loss: string[] = [...conditions[play].loss]
   if (win.includes(otherPlay)) {
     return "win"
   }
-  if (loss.includes(otherPlay)) {
+  else if (otherPlay !== play) {
     return "lose"
   }
   return "tie"
 }
 
-export type GenericWinCheck = ClassicOptions | FiveWayOptions;
+export type ModeOptions = "classic" | "fiveWay" | "sevenWay"
+export type GenericWinCheck = ClassicOptions | FiveWayOptions | SevenWayOptions;
 export function getModeOptions(mode: ModeOptions) {
   switch (mode) {
     case "classic":
@@ -35,6 +34,11 @@ export function getModeOptions(mode: ModeOptions) {
       return {
         "winOptions": fiveWayWin,
         "options": fiveWayOptionList
+      }
+    case "sevenWay":
+      return {
+        "winOptions": sevenWayWin,
+        "options": sevenWayOptionList
       }
     default:
       break;
