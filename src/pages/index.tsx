@@ -43,20 +43,26 @@ export default function Home({ socket }: { socket: Socket }) {
 
   return (
     <main className={`${inter.className}`}>
-      <Link href={"/setup"}>New Game</Link>
-      <br />
-      <div id="error">
-        <p>{error}</p>
+      <p className="text-3xl text-center py-4 sm:py-6">Rock Paper Scissors</p>
+      <div className="flex flex-wrap sm:flex-row justify-center space-y-12 sm:space-y-0 sm:space-x-48 pt-10">
+        <div className="px-24 py-16 border border-neutral-400">
+          <Link className="border-b border-neutral-500 py-1" href={"/setup"}>New Game</Link>
+        </div>
+        <div className="px-12 py-16 border border-neutral-400">
+          <div id="error">
+            <p>{error}</p>
+          </div>
+          <form onSubmit={(ev) => {
+            ev.preventDefault();
+            handleJoin();
+          }}>
+            <input className="border-b border-b-neutral-500 block" placeholder="room code" type="text" id="room" name="room" onChange={(ev) => {
+              setCode(ev.currentTarget.value)
+            }} />
+            <button className="mt-4 border-b border-neutral-500 py-1" type="submit">Join game</button>
+          </form>
+        </div>
       </div>
-      <form onSubmit={(ev) => {
-        ev.preventDefault();
-        handleJoin();
-      }}>
-        <input className="text-black" type="text" id="room" name="room" onChange={(ev) => {
-          setCode(ev.currentTarget.value)
-        }} />
-        <button type="submit">Join room</button>
-      </form>
-    </main>
+    </main >
   );
 }

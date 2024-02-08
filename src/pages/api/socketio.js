@@ -6,14 +6,14 @@ export default function ioHandler(req, res) {
 
     const io = new Server(res.socket.server)
 
-    const getRoomData = (socket, code = "") => {
+    const getRoomData = (socket, code = "", left=false) => {
       const rooms = socket.rooms;
       const playersInRoom = io.sockets.adapter.rooms.get(code);
       let players = [];
       if (playersInRoom) {
         players = Array.from(playersInRoom);
       }
-      return JSON.stringify({data: [...rooms], players: players});
+      return JSON.stringify({data: [...rooms], players: players, playerLeft: left});
     }
 
     io.on("connection", async (socket) => {
@@ -54,7 +54,7 @@ export default function ioHandler(req, res) {
         }
         console.log(`left code: ${code}`)
         socket.leave(code)
-        socket.to(code).emit("room_data", getRoomData(socket, code));
+        io.to(code).emit("player_left", socket.id);
       })
     });
     res.socket.server.io = io
