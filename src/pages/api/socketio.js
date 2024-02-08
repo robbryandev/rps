@@ -53,6 +53,12 @@ export default function ioHandler(req, res) {
         io.to(settings.code).emit("sync_settings", settings)
       })
 
+      socket.on("picked", (data) => {
+        console.log("picked signal")
+        const jsonData = JSON.parse(data);
+        io.to(jsonData.code).emit("sync_pick", JSON.stringify({player: socket.id, pick: jsonData.option}))
+      })
+
       socket.on("confirm_leave", (code) => {
         socket.leave(code);
         socket.emit("return");

@@ -23,10 +23,12 @@ export default function Game({ socket }: { socket: Socket }) {
     switch (settings.mode) {
       case "classic":
         return (
-          <Classic socket={socket} settings={settings} players={players} />
+          <Classic socket={socket} settings={settings} room={room} players={players} />
         )
       default:
-        return (<Classic socket={socket} settings={settings} players={players} />)
+        return (
+          <></>
+        )
     }
   }
 

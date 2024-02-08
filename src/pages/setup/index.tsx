@@ -7,7 +7,7 @@ import localforage from "localforage";
 
 const inter = Inter({ subsets: ["latin"] });
 
-type ModeOptions = "classic"
+export type ModeOptions = "classic"
 export type RoundOptions = 3 | 5
 
 export type GameSettings = {
