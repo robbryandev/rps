@@ -26,6 +26,7 @@ export default function ioHandler(req, res) {
         if ([...socket.rooms].length > 1) {
           code = [...socket.rooms][1];
         }
+        socket.to(code).emit("new_player");
         socket.emit("room_data", getRoomData(socket, code));
         socket.to(code).emit("room_data", getRoomData(socket, code));
       })
@@ -44,6 +45,17 @@ export default function ioHandler(req, res) {
         } else {
           socket.emit("room_not_found")
         }
+      })
+
+      socket.on("game_settings", (settings) => {
+        console.log(`settings signal: ${settings.code}`)
+        socket.emit("sync_settings", settings)
+        io.to(settings.code).emit("sync_settings", settings)
+      })
+
+      socket.on("confirm_leave", (code) => {
+        socket.leave(code);
+        socket.emit("return");
       })
 
       socket.on("disconnecting", () => {

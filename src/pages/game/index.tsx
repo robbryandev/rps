@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import router from "next/router";
 import { useEffect, useRef, useState } from "react";
 import type { Socket } from "socket.io-client";
+import { GameSettings } from "../setup";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,11 +13,21 @@ export default function Game({ socket }: { socket: Socket }) {
   const [room, setRoom] = useState<string>("")
   let playerId = useRef<string>();
   const [players, setPlayers] = useState<string[]>([])
+  const [settings, setSettings] = useState<GameSettings>()
 
-  const Mode = () => {
-    return (
-      <Classic socket={socket} players={players} />
-    )
+  const Mode = ({ settings }: { settings: GameSettings | undefined }) => {
+    if (!settings) {
+      return (<></>)
+    }
+
+    switch (settings.mode) {
+      case "classic":
+        return (
+          <Classic socket={socket} settings={settings} players={players} />
+        )
+      default:
+        return (<Classic socket={socket} settings={settings} players={players} />)
+    }
   }
 
   useEffect(() => {
@@ -47,6 +58,20 @@ export default function Game({ socket }: { socket: Socket }) {
         }
       })
 
+      socket.on("new_player", async () => {
+        if (room === socket.id) {
+          console.log("new_player")
+          const newSettings = await localforage.getItem("settings")
+          socket.emit("game_settings", { settings: newSettings, code: room })
+        }
+      })
+
+      socket.on("sync_settings", async (settingVal) => {
+        console.log("got sync signal")
+        await localforage.setItem("settings", settingVal.settings)
+        setSettings(JSON.parse(settingVal.settings))
+      })
+
       socket.on("player_left", async (code) => {
         setPlayers(players.filter((val) => {
           return val !== code;
@@ -54,8 +79,12 @@ export default function Game({ socket }: { socket: Socket }) {
         const roomCache = await localforage.getItem("room")
         if (playerId.current !== roomCache) {
           console.log(`${roomCache} !== ${socket.id}: ${roomCache !== socket.id}`)
-          router.push("/")
+          socket.emit("confirm_leave", code)
         }
+      })
+
+      socket.on("return", () => {
+        router.push("/")
       })
     }
   }, [room])
@@ -67,7 +96,7 @@ export default function Game({ socket }: { socket: Socket }) {
         players.length === 1 ? (
           <Lobby />
         ) : (
-          <Mode />
+          <Mode settings={settings} />
         )
       }
     </main>

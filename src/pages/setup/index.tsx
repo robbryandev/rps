@@ -2,15 +2,34 @@ import { Inter } from "next/font/google";
 import type { Socket } from "socket.io-client";
 import Link from "next/link";
 import { useState } from "react";
+import router from "next/router";
+import localforage from "localforage";
 
 const inter = Inter({ subsets: ["latin"] });
 
 type ModeOptions = "classic"
-type RoundOptions = 3 | 5
+export type RoundOptions = 3 | 5
 
 export type GameSettings = {
   mode: ModeOptions,
   rounds: RoundOptions
+}
+
+export function getRoundString(roundOpt: RoundOptions | GameSettings) {
+  let round = 3;
+  if (typeof roundOpt === "number") {
+    round = roundOpt;
+  } else {
+    round = roundOpt.rounds;
+  }
+  switch (round) {
+    case 3:
+      return "best 2 out of 3"
+    case 5:
+      return "best 3 out of 5"
+    default:
+      return ""
+  }
 }
 
 export default function Setup({ socket }: { socket: Socket }) {
@@ -18,25 +37,15 @@ export default function Setup({ socket }: { socket: Socket }) {
     "mode": "classic",
     "rounds": 3
   })
-
-  const getRoundString = (roundOpt: RoundOptions | GameSettings) => {
-    let round = 3;
-    if (typeof roundOpt === "number") {
-      round = roundOpt;
-    } else {
-      round = roundOpt.rounds;
-    }
-    switch (round) {
-      case 3:
-        return "best 2 out of 3"
-      case 5:
-        return "best 3 out of 5"
-      default:
-        return ""
-    }
-  }
-
   const [displayRounds, setDisplayRounds] = useState<string>(getRoundString(3))
+
+  const startGame = () => {
+    localforage.setItem("settings", JSON.stringify(settings)).then(() => {
+      router.push("/game")
+    }).catch((err: any) => {
+      console.log(err)
+    })
+  }
 
   return (
     <main className={`${inter.className}`}>
@@ -59,7 +68,7 @@ export default function Setup({ socket }: { socket: Socket }) {
       </div>
       <div className="flex flex-row justify-center space-x-24 mt-6">
         <Link className="block border-b border-neutral-500" href={"/"}>Cancel</Link>
-        <Link className="block border-b border-neutral-500" href={"/game"}>Start</Link>
+        <button className="block border-b border-neutral-500" onClick={startGame}>Start</button>
       </div>
     </main>
   );
