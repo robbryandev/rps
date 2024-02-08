@@ -2,20 +2,21 @@ import { GameSettings, getRoundString } from "@/pages/setup";
 import { useEffect, useState } from "react";
 import type { Socket } from "socket.io-client";
 import type { RoundOptions } from "@/pages/setup";
-import { winState, type WinState } from "@/modes/logic";
-import { type ClassicOptions, classicOptionList, classicWin } from "@/modes/classic";
+import { WinLossMap, winState, type WinState } from "@/modes/logic";
 
-export default function Classic({ socket, settings, room, players }: { socket: Socket, settings: GameSettings, room: string, players: string[] }) {
+export default function MainGame<T extends string>({
+  socket, settings, room, winOptions, options }: {
+    socket: Socket, settings: GameSettings, room: string, winOptions: WinLossMap<T>, options: readonly string[]
+  }) {
+
   const [rounds] = useState<RoundOptions>(settings.rounds);
   const [currentRound, setCurrentRound] = useState<number>(1);
-  const [userPick, setUserPick] = useState<ClassicOptions>();
-  const [otherPick, setOtherPick] = useState<ClassicOptions>();
+  const [userPick, setUserPick] = useState<T>();
+  const [otherPick, setOtherPick] = useState<T>();
   const [wins, setWins] = useState<number>(0);
   const [loss, setLoss] = useState<number>(0);
   const [gameOver, setGameOver] = useState<boolean>(false);
   const [roundState, setRoundState] = useState<WinState>();
-
-  const options = classicOptionList;
 
   useEffect(() => {
     if (socket.connected) {
@@ -41,7 +42,7 @@ export default function Classic({ socket, settings, room, players }: { socket: S
 
   useEffect(() => {
     if (userPick && otherPick && currentRound <= rounds && wins !== getWinCount(rounds)) {
-      const currentRoundState = winState<ClassicOptions>(classicWin, userPick, otherPick);
+      const currentRoundState = winState<T>(winOptions, userPick, otherPick);
       setRoundState(currentRoundState)
       setTimeout(() => {
         switch (currentRoundState) {
@@ -99,7 +100,7 @@ export default function Classic({ socket, settings, room, players }: { socket: S
           ) : options.map((opt) => {
             return (
               <button onClick={() => {
-                setUserPick(opt);
+                setUserPick(opt as T);
                 socket.emit("picked", JSON.stringify({ option: opt, code: room }))
               }} className="px-4 underline" key={opt}>
                 {opt}

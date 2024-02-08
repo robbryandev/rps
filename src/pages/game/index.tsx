@@ -1,11 +1,12 @@
-import Lobby from "@/components/game/lobby";
-import Classic from "@/components/game/modes/classic";
+import Lobby from "@/components/lobby";
+import MainGame from "@/components/mainGame";
 import localforage from "localforage";
 import { Inter } from "next/font/google";
 import router from "next/router";
 import { useEffect, useRef, useState } from "react";
 import type { Socket } from "socket.io-client";
 import { GameSettings } from "../setup";
+import { ClassicOptions, classicOptionList, classicWin } from "@/modes/classic";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -15,20 +16,18 @@ export default function Game({ socket }: { socket: Socket }) {
   const [players, setPlayers] = useState<string[]>([])
   const [settings, setSettings] = useState<GameSettings>()
 
-  const Mode = ({ settings }: { settings: GameSettings | undefined }) => {
-    if (!settings) {
-      return (<></>)
-    }
-
-    switch (settings.mode) {
+  const Main = () => {
+    switch (settings?.mode) {
       case "classic":
-        return (
-          <Classic socket={socket} settings={settings} room={room} players={players} />
-        )
+        return MainGame<ClassicOptions>({
+          "socket": socket,
+          "settings": settings,
+          "room": room,
+          "winOptions": classicWin,
+          "options": classicOptionList
+        })
       default:
-        return (
-          <></>
-        )
+        return <></>
     }
   }
 
@@ -98,7 +97,9 @@ export default function Game({ socket }: { socket: Socket }) {
         players.length === 1 ? (
           <Lobby />
         ) : (
-          <Mode settings={settings} />
+          settings ? (
+            <Main />
+          ) : null
         )
       }
     </main>
