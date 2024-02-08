@@ -79,39 +79,49 @@ export default function MainGame<T extends string>({
 
   return (
     <>
-      <p className="text-2xl">{settings.modeName} mode</p>
-      <p className="text-2xl">Rounds: {getRoundString(rounds)}</p>
-      <p className="text-2xl">Round: {currentRound}</p>
-      <p className="text-2xl">Wins: {wins}</p>
-
-      <br />
-      {
-        gameOver ? (
-          <>
-            Game Over: {wins === getWinCount(rounds) ? "Winner" : "Loser"}
-          </>
-        ) :
-          userPick && otherPick ? (
-            <>
+      <div className="flex flex-col w-[80vw] mx-auto">
+        <div className="sm:w-1/3 mx-auto">
+          <p className="text-2xl">{settings.modeName} mode</p>
+          <p className="text-2xl">Rounds: {getRoundString(rounds)}</p>
+          <p className="text-2xl">Round: {currentRound}</p>
+          <p className="text-2xl">Wins: {wins}</p>
+        </div>
+        {
+          gameOver ? (
+            <div className="sm:w-1/3 mx-auto text-center py-6 font-semibold text-2xl">
               <p>
-                {roundState}
+                Game Over: {wins === getWinCount(rounds) ? "Winner" : "Loser"}
               </p>
-            </>
-          ) : userPick ? (
-            <p className="text-2xl">picked: {userPick}</p>
-          ) : options.map((opt) => {
-            return (
-              <button onClick={() => {
-                setUserPick(opt as T);
-                socket.emit("picked", JSON.stringify({ option: opt, code: room }))
-              }} className="px-4 underline" key={opt}>
-                {opt}
-              </button>
-            )
-          })
-      }
-      <div className="w-72 h-auto">
-        <img className="grayscale" src={`/${settings.mode}.png`} alt="mode instructions" />
+            </div>
+          ) :
+            userPick && otherPick ? (
+              <div className="sm:w-1/3 mx-auto text-center py-6 font-semibold text-2xl">
+                <p>
+                  {roundState}
+                </p>
+
+              </div>
+            ) : userPick ? (
+              <div className="sm:w-1/3 mx-auto text-center py-6 font-semibold">
+                <p className="text-2xl">picked: {userPick}</p>
+              </div>
+            ) : (
+              <div className="space-x-8 text-center py-6">
+                {options.map((opt) => {
+                  return (
+                    <button onClick={() => {
+                      setUserPick(opt as T);
+                      socket.emit("picked", JSON.stringify({ option: opt, code: room }))
+                    }} className="px-4 text-3xl" key={opt}>
+                      {opt}
+                    </button>
+                  )
+                })}
+              </div>)
+        }
+        <div className="w-72 h-auto mx-auto">
+          <img className="grayscale" src={`/${settings.mode}.png`} alt="mode instructions" />
+        </div>
       </div>
     </>
   )

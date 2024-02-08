@@ -1,11 +1,11 @@
-import { Inter } from "next/font/google";
+import { Just_Another_Hand } from "next/font/google";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import type { Socket } from "socket.io-client";
 import router from "next/router";
 import localforage from "localforage";
 
-const inter = Inter({ subsets: ["latin"] });
+const pageFont = Just_Another_Hand({ weight: "400", subsets: ["latin"] });
 
 export default function Home({ socket }: { socket: Socket }) {
   const [code, setCode] = useState<string>("");
@@ -42,13 +42,13 @@ export default function Home({ socket }: { socket: Socket }) {
 
 
   return (
-    <main className={`${inter.className}`}>
-      <p className="text-3xl text-center py-4 sm:py-6">Rock Paper Scissors</p>
-      <div className="flex flex-wrap sm:flex-row justify-center space-y-12 sm:space-y-0 sm:space-x-48 pt-10">
-        <div className="px-24 py-16 border border-neutral-400">
+    <main className={`${pageFont.className}`}>
+      <p className="text-5xl text-center pb-4 pt-10 sm:py-6">Rock Paper Scissors</p>
+      <div className="flex flex-wrap sm:flex-row justify-center space-y-12 sm:space-y-0 sm:space-x-24 pt-10 text-xl">
+        <div className="px-20 py-16 w-3/5 sm:w-auto border border-dashed border-neutral-400 bg-white/75">
           <Link className="border-b border-neutral-500 py-1" href={"/setup"}>New Game</Link>
         </div>
-        <div className="px-12 py-16 border border-neutral-400">
+        <div className="px-12 py-16 w-3/5 sm:w-auto border border-dashed border-neutral-400 bg-white/75">
           <div id="error">
             <p>{error}</p>
           </div>
@@ -56,7 +56,7 @@ export default function Home({ socket }: { socket: Socket }) {
             ev.preventDefault();
             handleJoin();
           }}>
-            <input className="border-b border-b-neutral-500 block" placeholder="room code" type="text" id="room" name="room" onChange={(ev) => {
+            <input className="border-b border-b-neutral-500 block bg-white/75" placeholder="room code" type="text" id="room" name="room" onChange={(ev) => {
               setCode(ev.currentTarget.value)
             }} />
             <button className="mt-4 border-b border-neutral-500 py-1" type="submit">Join game</button>

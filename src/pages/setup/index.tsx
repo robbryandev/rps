@@ -1,4 +1,4 @@
-import { Inter } from "next/font/google";
+import { Just_Another_Hand } from "next/font/google";
 import type { Socket } from "socket.io-client";
 import Link from "next/link";
 import { useState } from "react";
@@ -6,7 +6,7 @@ import router from "next/router";
 import localforage from "localforage";
 import type { ModeOptions } from "@/modes/logic";
 
-const inter = Inter({ subsets: ["latin"] });
+const pageFont = Just_Another_Hand({ weight: "400", subsets: ["latin"] });
 
 export type RoundOptions = 3 | 5
 
@@ -50,12 +50,13 @@ export default function Setup({ socket }: { socket: Socket }) {
   }
 
   return (
-    <main className={`${inter.className}`}>
-      <p className="text-3xl text-center py-4 sm:py-6">Rock Paper Scissors</p>
-      <div className="grid grid-cols-2 gap-24 w-2/5 mx-auto pt-10">
-        <div className="border border-neutral-400 py-10">
-          <p className="text-center">Mode: <span className="font-semibold">{settings.modeName}</span></p>
-          <select id="modes" className="border-b border-neutral-500" onChange={(data) => {
+    <main className={`${pageFont.className}`}>
+      <p className="text-5xl text-center py-4 sm:py-6">Rock Paper Scissors</p>
+      <div className="grid gap-10 sm:grid-cols-2 sm:gap-16 w-2/5 sm:w-1/2 sm:max-w-[500px] mx-auto pt-10 text-xl">
+        <div className="border border-dashed border-neutral-400 py-10 text-center bg-white/75">
+          <p>Mode:</p>
+          <pre className={pageFont.className}><span className="font-semibold">{settings.modeName}</span></pre>
+          <select id="modes" className="border-b border-neutral-500 text-xl" onChange={(data) => {
             const newModeOpt = data.currentTarget.value as ModeOptions;
             const modeSelect = data.currentTarget;
             setSettings({
@@ -65,13 +66,14 @@ export default function Setup({ socket }: { socket: Socket }) {
             })
           }}>
             <option value="classic">Classic</option>
-            <option value="fiveWay">Five Way</option>
-            <option value="sevenWay">Seven Way</option>
+            <option value="fiveWay">5 Way</option>
+            <option value="sevenWay">7 Way</option>
           </select>
         </div>
-        <div className="border border-neutral-400 py-10 text-center">
-          <p>Rounds: <span className="font-semibold">{displayRounds}</span></p>
-          <select id="rounds" className="border-b border-neutral-500" onChange={(data) => {
+        <div className="border border-dashed border-neutral-400 py-10 text-center bg-white/75">
+          <p>Rounds: </p>
+          <pre className={pageFont.className}><span className="font-semibold">{displayRounds}</span></pre>
+          <select id="rounds" className="border-b border-neutral-500 text-xl" onChange={(data) => {
             const newRoundOpt = parseInt(data.currentTarget.value) as RoundOptions;
             setSettings({ ...settings, rounds: newRoundOpt })
             setDisplayRounds(getRoundString(newRoundOpt))
@@ -81,7 +83,7 @@ export default function Setup({ socket }: { socket: Socket }) {
           </select>
         </div>
       </div>
-      <div className="flex flex-row justify-center space-x-24 mt-6">
+      <div className="flex flex-row justify-center space-x-24 mt-6 text-2xl">
         <Link className="block border-b border-neutral-500" href={"/"}>Cancel</Link>
         <button className="block border-b border-neutral-500" onClick={startGame}>Start</button>
       </div>

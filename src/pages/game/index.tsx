@@ -1,14 +1,16 @@
 import Lobby from "@/components/lobby";
 import MainGame from "@/components/mainGame";
 import localforage from "localforage";
-import { Inter } from "next/font/google";
+import { Inter, Just_Another_Hand } from "next/font/google";
 import router from "next/router";
 import { useEffect, useRef, useState } from "react";
 import type { Socket } from "socket.io-client";
 import { GameSettings } from "../setup";
 import { WinLossMap, getModeOptions, GenericWinCheck } from "@/modes/logic";
 
+
 const inter = Inter({ subsets: ["latin"] });
+const pageFont = Just_Another_Hand({ weight: "400", subsets: ["latin"] });
 
 export default function Game({ socket }: { socket: Socket }) {
   const [room, setRoom] = useState<string>("")
@@ -90,17 +92,21 @@ export default function Game({ socket }: { socket: Socket }) {
   }, [room])
 
   return (
-    <main className={`${inter.className}`}>
-      <p className="text-4xl">Room: {room}</p>
+    <main className={`${pageFont.className} p-10`}>
+      <p className="text-5xl text-center pt-4 pb-2 sm:py-6">Rock Paper Scissors</p>
+      <p className="text-4xl text-center pb-4 sm:py-6">Room: <span className={inter.className + " text-2xl"}>{room}</span></p>
       {
         players.length === 1 ? (
-          <Lobby />
+          <div className="sm:w-2/5">
+            <Lobby />
+          </div>
         ) : (
           settings ? (
             <Main />
           ) : null
         )
       }
+
     </main>
   );
 }

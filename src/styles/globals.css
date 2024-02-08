@@ -1,3 +1,22 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+body {
+  background-image: url("/paperBG.jpg");
+  background-repeat: repeat;
+  backdrop-filter: brightness(115%);
+  min-height: 100vh;
+}
+
+.text-5xl {
+  letter-spacing: 0.5rem;
+}
+
+.text-2xl {
+  letter-spacing: 0.25rem;
+}
+
+.text-xl {
+  letter-spacing: 0.2rem;
+}
