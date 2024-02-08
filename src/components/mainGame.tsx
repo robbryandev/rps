@@ -6,7 +6,8 @@ import { WinLossMap, winState, type WinState } from "@/modes/logic";
 
 export default function MainGame<T extends string>({
   socket, settings, room, winOptions, options }: {
-    socket: Socket, settings: GameSettings, room: string, winOptions: WinLossMap<T>, options: readonly string[]
+    socket: Socket, settings: GameSettings, room: string,
+    winOptions: WinLossMap<T>, options: readonly string[]
   }) {
 
   const [rounds] = useState<RoundOptions>(settings.rounds);
@@ -78,7 +79,7 @@ export default function MainGame<T extends string>({
 
   return (
     <>
-      <p className="text-2xl">Classic mode</p>
+      <p className="text-2xl">{settings.modeName} mode</p>
       <p className="text-2xl">Rounds: {getRoundString(rounds)}</p>
       <p className="text-2xl">Round: {currentRound}</p>
       <p className="text-2xl">Wins: {wins}</p>

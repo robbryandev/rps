@@ -7,11 +7,12 @@ import localforage from "localforage";
 
 const inter = Inter({ subsets: ["latin"] });
 
-export type ModeOptions = "classic"
+export type ModeOptions = "classic" | "fiveWay"
 export type RoundOptions = 3 | 5
 
 export type GameSettings = {
   mode: ModeOptions,
+  modeName: string,
   rounds: RoundOptions
 }
 
@@ -35,6 +36,7 @@ export function getRoundString(roundOpt: RoundOptions | GameSettings) {
 export default function Setup({ socket }: { socket: Socket }) {
   const [settings, setSettings] = useState<GameSettings>({
     "mode": "classic",
+    "modeName": "Classic",
     "rounds": 3
   })
   const [displayRounds, setDisplayRounds] = useState<string>(getRoundString(3))
@@ -52,11 +54,23 @@ export default function Setup({ socket }: { socket: Socket }) {
       <p className="text-3xl text-center py-4 sm:py-6">Rock Paper Scissors</p>
       <div className="grid grid-cols-2 gap-24 w-2/5 mx-auto pt-10">
         <div className="border border-neutral-400 py-10">
-          <p className="text-center">Mode: <span className="font-semibold">{settings.mode}</span></p>
+          <p className="text-center">Mode: <span className="font-semibold">{settings.modeName}</span></p>
+          <select id="modes" className="border-b border-neutral-500" onChange={(data) => {
+            const newModeOpt = data.currentTarget.value as ModeOptions;
+            const modeSelect = data.currentTarget;
+            setSettings({
+              ...settings,
+              mode: newModeOpt,
+              modeName: modeSelect.options[modeSelect.selectedIndex].text
+            })
+          }}>
+            <option value="classic" label="Classic">Classic</option>
+            <option value="fiveWay" label="Five Way">Five Way</option>
+          </select>
         </div>
         <div className="border border-neutral-400 py-10 text-center">
           <p>Rounds: <span className="font-semibold">{displayRounds}</span></p>
-          <select className="border-b border-neutral-500" onChange={(data) => {
+          <select id="rounds" className="border-b border-neutral-500" onChange={(data) => {
             const newRoundOpt = parseInt(data.currentTarget.value) as RoundOptions;
             setSettings({ ...settings, rounds: newRoundOpt })
             setDisplayRounds(getRoundString(newRoundOpt))

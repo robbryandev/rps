@@ -1,3 +1,7 @@
+import type { ModeOptions } from "@/pages/setup"
+import { type ClassicOptions, classicOptionList, classicWin } from "./classic"
+import { type FiveWayOptions, fiveWayOptionList, fiveWayWin } from "./fiveWay"
+
 export type WinState = "win" | "lose" | "tie"
 
 export type WinLossMap<T extends string> = {
@@ -17,4 +21,22 @@ export function winState<T extends string>(conditions: WinLossMap<T>, play: T, o
     return "lose"
   }
   return "tie"
+}
+
+export type GenericWinCheck = ClassicOptions | FiveWayOptions;
+export function getModeOptions(mode: ModeOptions) {
+  switch (mode) {
+    case "classic":
+      return {
+        "winOptions": classicWin,
+        "options": classicOptionList
+      }
+    case "fiveWay":
+      return {
+        "winOptions": fiveWayWin,
+        "options": fiveWayOptionList
+      }
+    default:
+      break;
+  }
 }

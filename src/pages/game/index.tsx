@@ -6,7 +6,7 @@ import router from "next/router";
 import { useEffect, useRef, useState } from "react";
 import type { Socket } from "socket.io-client";
 import { GameSettings } from "../setup";
-import { ClassicOptions, classicOptionList, classicWin } from "@/modes/classic";
+import { WinLossMap, getModeOptions, GenericWinCheck } from "@/modes/logic";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -17,18 +17,17 @@ export default function Game({ socket }: { socket: Socket }) {
   const [settings, setSettings] = useState<GameSettings>()
 
   const Main = () => {
-    switch (settings?.mode) {
-      case "classic":
-        return MainGame<ClassicOptions>({
-          "socket": socket,
-          "settings": settings,
-          "room": room,
-          "winOptions": classicWin,
-          "options": classicOptionList
-        })
-      default:
-        return <></>
+    if (!settings?.mode) {
+      return <></>
     }
+    const modeOptionData = getModeOptions(settings.mode)!;
+    return MainGame<GenericWinCheck>({
+      "socket": socket,
+      "settings": settings,
+      "room": room,
+      "winOptions": modeOptionData.winOptions as WinLossMap<GenericWinCheck>,
+      "options": modeOptionData.options
+    })
   }
 
   useEffect(() => {
