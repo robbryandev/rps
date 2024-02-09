@@ -97,7 +97,7 @@ export default function Game({ socket }: { socket: Socket }) {
       <p className="text-4xl text-center pb-4 sm:py-6">Room: <span className={inter.className + " text-2xl"}>{room}</span></p>
       {
         players.length === 1 ? (
-          <div className="sm:w-2/5">
+          <div className="sm:w-2/5 mx-auto">
             <Lobby />
           </div>
         ) : (

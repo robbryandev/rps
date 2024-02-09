@@ -68,6 +68,7 @@ export default function Setup({ socket }: { socket: Socket }) {
             <option value="classic">Classic</option>
             <option value="fiveWay">5 Way</option>
             <option value="sevenWay">7 Way</option>
+            <option value="nineWay">9 Way</option>
           </select>
         </div>
         <div className="border border-dashed border-neutral-400 py-10 text-center bg-white/75">

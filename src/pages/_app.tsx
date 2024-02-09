@@ -1,5 +1,6 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
+import Head from "next/head";
 import { Socket, io } from "socket.io-client";
 import { useState, useEffect } from "react";
 
@@ -23,5 +24,12 @@ export default function App({ Component, pageProps }: AppProps) {
     })
   }, [])
 
-  return <Component socket={globalSocket} {...pageProps} />;
+  return (
+    <>
+      <Head>
+        <title>Rock Paper Scissors</title>
+      </Head>
+      <Component socket={globalSocket} {...pageProps} />;
+    </>
+  )
 }
